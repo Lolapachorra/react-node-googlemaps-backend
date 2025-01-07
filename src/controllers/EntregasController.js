@@ -1,5 +1,8 @@
 const Entrega = require('../models/Entregas.js')
 const ObjectId = require('mongoose').Types.ObjectId
+const axios = require('axios');
+
+
 module.exports = class EntregasController {
     static async createEntrega(req, res) {
         const { nome, pontoPartida, pontoDestino } = req.body
@@ -9,7 +12,7 @@ module.exports = class EntregasController {
             pontoPartida: pontoPartida,
             pontoDestino: pontoDestino
         })
-        
+
         //create
         try {
             const newEntrega = await entrega.save()
@@ -21,7 +24,7 @@ module.exports = class EntregasController {
     static async getAllEntregas(req, res) {
         try {
             const entregas = await Entrega.find()
-            res.json(entregas)
+            res.status(200).json({ entregas: entregas })
         } catch (error) {
             res.status(500).json({ message: 'Ocorreu um erro inesperado' })
         }
@@ -59,6 +62,33 @@ module.exports = class EntregasController {
             res.json(updatedEntrega)
         } catch (error) {
             res.status(500).json({ message: 'Ocorreu um erro inesperado' })
+        }
+    }
+    static async calcularRota(req, res) {
+        const { id } = req.params
+        if (!ObjectId.isValid(id)) return res.status(404).json({ error: 'Id Inválido' })
+        try {
+            const entrega = await Entrega.findById(id)
+            if (!entrega) return res.status(404).json({ error: 'Entrega não encontrada' })
+            const { pontoPartida, pontoDestino } = entrega
+            const apiKey = process.env.API_KEY
+            console.log(apiKey)
+            console.log(pontoPartida)
+            console.log(pontoDestino)
+            const directionURL = `https://maps.googleapis.com/maps/api/directions/json?origin=${encodeURIComponent(pontoPartida)}&destination=${encodeURIComponent(pontoDestino)}&key=${apiKey}`
+            const response = await axios.get(directionURL)
+            // Extrair dados da rota
+            const route = response.data.routes[0].legs[0];
+            res.status(200).json({
+                nome: entrega.nome,
+                pontoPartida: route.start_address,
+                pontoDestino: route.end_address,
+                distancia: route.distance.text,
+                duracao: route.duration.text,
+            });
+        }
+        catch (error) {
+            res.status(500).json({ message: error.message })
         }
     }
 
