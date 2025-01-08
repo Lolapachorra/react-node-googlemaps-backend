@@ -7,8 +7,8 @@ const Entrega = mongoose.model(
   new Schema(
     {
       nome: { type: "string", required: true },
-      pontoPartida: { type: "string", required: true},
-      pontoDestino: { type: "string", required: true},
+      pontoPartida: { type: "string", required: true },
+      pontoDestino: { type: "string", required: true },
     },
     { timestamps: true }
   )
