@@ -1,12 +1,14 @@
-const express = require("express");
-const app = express();
-const cors = require("cors");
-const port = 3000;
-require("dotenv").config();
+import express, { Application } from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import swaggerJsDoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
+import RotaEntregas from "./routes/EntregasRoutes";
 
+dotenv.config();
 
-const swaggerJsDoc = require("swagger-jsdoc");
-const swaggerUi = require("swagger-ui-express");
+const app: Application = express();
+const port: number = 3000;
 
 const swaggerOptions = {
   definition: {
@@ -17,12 +19,13 @@ const swaggerOptions = {
       description: "API de gerenciamento de entregas",
     },
   },
-  apis: ["./src/routes/*.js"],
+  apis: ["./src/routes/*.ts"],
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
-//middlewares
+
+// Middlewares
 app.use(
   cors({
     credentials: true,
@@ -31,10 +34,9 @@ app.use(
 );
 app.use(express.json());
 
-//routes
-const RotaEntregas = require("./src/routes/EntregasRoutes.js");
-
+// Routes
 app.use("/entregas", RotaEntregas);
+
 app.listen(port, () => {
-  console.log(`Server rodando na url ${port}`);
+  console.log(`Server rodando na url http://localhost:${port}`);
 });
