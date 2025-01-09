@@ -21,10 +21,11 @@ const swaggerOptions = {
             description: "API de gerenciamento de entregas",
         },
     },
-    apis: ["./src/routes/*.ts"],
+    apis: ["./dist/routes/*.js"],
 };
 const swaggerDocs = (0, swagger_jsdoc_1.default)(swaggerOptions);
 app.use("/api-docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerDocs));
+// console.log(swaggerDocs);
 // Middlewares
 app.use((0, cors_1.default)({
     credentials: true,

@@ -126,7 +126,7 @@ export default class EntregasController {
 
       const directionURL = `https://maps.googleapis.com/maps/api/directions/json?origin=${encodeURIComponent(
         pontoPartida
-      )}&destination=${encodeURIComponent(pontoDestino)}&key=${apiKey}`;
+      )}&destination=${encodeURIComponent(pontoDestino)}&key=${apiKey}&language=pt-br`;
 
       const response = await axios.get(directionURL);
 

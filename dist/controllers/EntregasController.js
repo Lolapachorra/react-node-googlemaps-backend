@@ -128,7 +128,7 @@ class EntregasController {
                 }
                 const { pontoPartida, pontoDestino } = entrega;
                 const apiKey = process.env.API_KEY;
-                const directionURL = `https://maps.googleapis.com/maps/api/directions/json?origin=${encodeURIComponent(pontoPartida)}&destination=${encodeURIComponent(pontoDestino)}&key=${apiKey}`;
+                const directionURL = `https://maps.googleapis.com/maps/api/directions/json?origin=${encodeURIComponent(pontoPartida)}&destination=${encodeURIComponent(pontoDestino)}&key=${apiKey}&language=pt-br`;
                 const response = yield axios_1.default.get(directionURL);
                 const route = response.data.routes[0].legs[0];
                 res.status(200).json({
